@@ -70,6 +70,7 @@ def perspective_with_pts_selected(filename):
     h, w = img.shape[:2]
     # img = cv2.resize(img, (int(w / 2), int(h / 2)))
     # h, w = img.shape[:2]
+    copy_img = img.copy()
     cv2.namedWindow(filename, cv2.WINDOW_NORMAL)
     cv2.setMouseCallback(filename, on_mouse, 0)
     global count
@@ -80,6 +81,7 @@ def perspective_with_pts_selected(filename):
         cv2.waitKey(1)
         if pre_count != count:
             print(pos)
+            cv2.circle(img, pos, int(h / 150), (0, 0, 255), int(h / 150))
             src_rect.append(pos)
             pre_count = count
     count = 0
@@ -139,7 +141,7 @@ def perspective_with_pts_selected(filename):
         raise Exception("did not solve this situation, maybe there are 2 pts in the same height(or width)")
 
     trans_m = cv2.getPerspectiveTransform(np.float32(src_rect), np.float32(dst_rect))
-    dst_img = cv2.warpPerspective(img, trans_m, (w, h))
+    dst_img = cv2.warpPerspective(copy_img, trans_m, (w, h))
 
     show_img(dst_img)
     cv2.destroyAllWindows()
@@ -147,8 +149,10 @@ def perspective_with_pts_selected(filename):
 
 if __name__ == "__main__":
     # img = cv2.imread("C:\\Users\\38345\\Desktop\\map.jpg")
-    for _, _, fs in os.walk('.'):
-        for f in fs:
-            if f.endswith(".jpg") or f.endswith(".png"):
-                perspective_with_pts_selected(f)
+    # for _, _, fs in os.walk('.'):
+    #     for f in fs:
+    #         if f.endswith(".jpg") or f.endswith(".png"):
+    #             perspective_with_pts_selected(f)
+    # perspective_with_pts_selected("C:\\Users\\38345\\Desktop\\map.jpg")
+    perspective_with_pts_selected("test2.png")
 
